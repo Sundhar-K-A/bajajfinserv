@@ -9,7 +9,8 @@ export default async function handler(req, res) {
                     message: "Missing required fields"
                 });
             }
-
+            
+            
             let evenNumbers = [];
             let oddNumbers = [];
             let alphabets = [];
