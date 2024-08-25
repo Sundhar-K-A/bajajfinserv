@@ -1,10 +1,9 @@
-
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             const { data } = req.body;
 
-            if (!data || !full_name || !dob) {
+            if (!data) {
                 return res.status(400).json({
                     is_success: false,
                     message: "Missing required fields"
@@ -14,6 +13,7 @@ export default async function handler(req, res) {
             let evenNumbers = [];
             let oddNumbers = [];
             let alphabets = [];
+            let highestLowercaseAlphabet = '';
 
             data.forEach(item => {
                 if (!isNaN(item)) { 
@@ -23,20 +23,22 @@ export default async function handler(req, res) {
                         oddNumbers.push(item);
                     }
                 } else if (/^[a-zA-Z]+$/.test(item)) { 
-                    alphabets.push(item.toUpperCase());
+                    alphabets.push(item);
+                    if (item === item.toLowerCase() && item > highestLowercaseAlphabet) {
+                        highestLowercaseAlphabet = item;
+                    }
                 }
             });
 
             const response = {
                 is_success: true,
-                user_id: `hohn_doe_21BCE2756`,
+                user_id: `john_doe_21BCE2756`,
                 email: "john@xyz.com", 
                 roll_number: "ABCD123",
-                numbers: numbers,
+                numbers: [...evenNumbers, ...oddNumbers],
                 alphabets: alphabets,
                 highest_lowercase_alphabet: highestLowercaseAlphabet ? [highestLowercaseAlphabet] : []
             };
-
 
             return res.status(200).json(response);
 
