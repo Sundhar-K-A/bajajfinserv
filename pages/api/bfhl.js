@@ -2,7 +2,7 @@
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
-            const { data, full_name, dob } = req.body;
+            const { data } = req.body;
 
             if (!data || !full_name || !dob) {
                 return res.status(400).json({
@@ -29,11 +29,14 @@ export default async function handler(req, res) {
 
             const response = {
                 is_success: true,
-                user_id: `${full_name.toLowerCase().replace(/\s+/g, '_')}_${dob.replace(/\//g, '')}`,
-                odd_numbers: oddNumbers,
-                even_numbers: evenNumbers,
-                alphabets: alphabets
+                user_id: `hohn_doe_21BCE2756`,
+                email: "john@xyz.com", 
+                roll_number: "ABCD123",
+                numbers: numbers,
+                alphabets: alphabets,
+                highest_lowercase_alphabet: highestLowercaseAlphabet ? [highestLowercaseAlphabet] : []
             };
+
 
             return res.status(200).json(response);
 
