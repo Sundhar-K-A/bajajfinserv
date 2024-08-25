@@ -1,4 +1,3 @@
-"use client"
 import React from "react";
 import axios from 'axios';
 
@@ -15,8 +14,6 @@ function Home() {
   const handleSubmit = async () => {
     try {
       const parsedJson = JSON.parse(jsonData);
-
-      
       const result = await axios.post('/api/endpoint', jsonData);
       setResponse(result.data);
 
