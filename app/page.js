@@ -15,7 +15,7 @@ function Home() {
   const handleSubmit = async () => {
     try {
       const parsedJson = JSON.parse(jsonData);
-      const result = await axios.post('https://bajajfinserv-gamma.vercel.app/api/bfhl', jsonData);
+      const result = await axios.post('/api/bfhl', jsonData);
       setResponse(result.data);
 
       const alphabets = Array.from({length: 26}, (_, i) => String.fromCharCode(97 + i)); // a-z
