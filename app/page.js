@@ -6,7 +6,7 @@ function Home() {
   const [jsonData, setJsonData] = React.useState('');
   const [error, setError] = React.useState(null);
   const [response, setResponse] = React.useState(null);
-  const [selectedOption, setSelectedOption] = React.useState(''); 
+  const [selectedOption, setSelectedOption] = React.useState('');
 
   const handleInputChange = (event) => {
     setJsonData(event.target.value);
@@ -18,7 +18,7 @@ function Home() {
 
   const handleSubmit = async () => {
     try {
-      const parsedJson = JSON.parse(jsonData); 
+      const parsedJson = JSON.parse(jsonData);
 
       const result = await axios.post('/api/bfhl', parsedJson, {
         headers: {
@@ -28,29 +28,27 @@ function Home() {
 
       setResponse(result.data);
 
-      console.log("API Response:", result.data);
-
     } catch (err) {
       setError(err.message);
     }
   };
 
-  const getFilteredResponse = () => {
-    if (!response) return {};
+  const formatResponse = () => {
+    if (!response) return '';
 
     switch (selectedOption) {
       case 'numbers':
-        return { numbers: response.numbers};
+        return `Numbers: ${response.numbers.join(', ')}`;
       case 'alphabets':
-        return {alphabets: response.alphabets};
+        return `Alphabets: ${response.alphabets.join(', ')}`;
       case 'highest_lowercase_alphabet':
-        return { highest_lowercase_alphabet: response.highest_lowercase_alphabet };
+        return `Highest Lowercase Alphabet: ${response.highest_lowercase_alphabet.join(', ')}`;
       default:
-        return response; 
+        return ''; 
     }
   };
 
-  const filteredResponse = getFilteredResponse();
+  const formattedResponse = formatResponse();
 
   return (
     <div className="container">
@@ -80,7 +78,7 @@ function Home() {
         </select>
       </div>
       
-      {filteredResponse && <pre>{JSON.stringify(filteredResponse, null, 2)}</pre>}
+      {formattedResponse && <p>{formattedResponse}</p>}
     </div>
   );
 }
