@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import axios from 'axios';
 
@@ -6,27 +6,51 @@ function Home() {
   const [jsonData, setJsonData] = React.useState('');
   const [error, setError] = React.useState(null);
   const [response, setResponse] = React.useState(null);
-  const [options, setOptions] = React.useState([]);
+  const [selectedOption, setSelectedOption] = React.useState(''); 
 
   const handleInputChange = (event) => {
     setJsonData(event.target.value);
   };
 
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
   const handleSubmit = async () => {
     try {
-      const parsedJson = JSON.parse(jsonData);
-      const result = await axios.post('/api/bfhl', jsonData);
+      const parsedJson = JSON.parse(jsonData); 
+
+      const result = await axios.post('/api/bfhl', parsedJson, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
       setResponse(result.data);
 
-      const alphabets = Array.from({length: 26}, (_, i) => String.fromCharCode(97 + i)); // a-z
-      const numbers = Array.from({length: 10}, (_, i) => i.toString());
-      const highestLowercase = alphabets.sort((a, b) => b.localeCompare(a))[0];
-      setOptions([...alphabets, ...numbers, highestLowercase]);
+      console.log("API Response:", result.data);
 
     } catch (err) {
       setError(err.message);
     }
   };
+
+  const getFilteredResponse = () => {
+    if (!response) return {};
+
+    switch (selectedOption) {
+      case 'numbers':
+        return { numbers: response.numbers};
+      case 'alphabets':
+        return {alphabets: response.alphabets};
+      case 'highest_lowercase_alphabet':
+        return { highest_lowercase_alphabet: response.highest_lowercase_alphabet };
+      default:
+        return response; 
+    }
+  };
+
+  const filteredResponse = getFilteredResponse();
 
   return (
     <div className="container">
@@ -45,14 +69,18 @@ function Home() {
         />
         <button type="submit">Submit</button>
       </form>
-      {response && <pre>{JSON.stringify(response, null, 2)}</pre>}
-      {options.length > 0 && (
-        <select multiple>
-          {options.map((option, index) => (
-            <option key={index} value={option}>{option}</option>
-          ))}
+      
+      <div>
+        <label htmlFor="options">Filter Results: </label>
+        <select id="options" onChange={handleSelectChange} value={selectedOption}>
+          <option value="">Select an option</option>
+          <option value="numbers">Numbers</option>
+          <option value="alphabets">Alphabets</option>
+          <option value="highest_lowercase_alphabet">Highest Lowercase Alphabet</option>
         </select>
-      )}
+      </div>
+      
+      {filteredResponse && <pre>{JSON.stringify(filteredResponse, null, 2)}</pre>}
     </div>
   );
 }
